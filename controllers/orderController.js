@@ -1,5 +1,6 @@
 const createHttpError = require("http-errors");
 const Order = require("../models/orderModel");
+const { default: mongoose } = require("mongoose");
 
 const addOrder = async (req, res, next) => {
     try {
@@ -17,6 +18,13 @@ const addOrder = async (req, res, next) => {
 
 const getOrderById = async (req, res, next) => {
     try {
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            const error = createHttpError(404, "Invalid id!");
+            return next(error);
+        }
+
         const order = await Order.findById(req.params.id);
 
         if (!order) {
@@ -45,6 +53,13 @@ const getOrders = async (req, res, next) => {
 const updateOrders = async (req, res, next) => {
     try {
         const { orderStatus } = req.body;
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            const error = createHttpError(404, "Invalid id!");
+            return next(error);
+        }
+        
         const order = await Order.findByIdAndUpdate(
             req.params.id,
             {orderStatus},
