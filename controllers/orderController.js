@@ -25,7 +25,7 @@ const getOrderById = async (req, res, next) => {
             return next(error);
         }
 
-        const order = await Order.findById(req.params.id);
+        const order = await Order.findById(id);
 
         if (!order) {
             const error = createHttpError(404, "Order not found!");
@@ -59,9 +59,9 @@ const updateOrders = async (req, res, next) => {
             const error = createHttpError(404, "Invalid id!");
             return next(error);
         }
-        
+
         const order = await Order.findByIdAndUpdate(
-            req.params.id,
+            id,
             {orderStatus},
             {new: true}
         );
